@@ -189,7 +189,7 @@ int limite (int l, int c){
 }
 
 void carregaMapa(const char *arquivo, char mapa[LIN][COL + 1], int *jogador.linha, int *jogador.coluna){
-    file *m = fopen(arquivo, "r");
+    file *m = fopen(arquivo, "r"); // Abre o arquivo para leitura ("r"). Se não achar, fopen devolve NULL.
     if(m == NULL){
         printf("Erro ao abrir o arquivo!");
     }
