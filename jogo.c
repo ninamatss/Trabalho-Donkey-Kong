@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "ranking.h"
 //#include <conio.h> //para utilizar as teclas de seta
 #define LIN 30
 
@@ -18,7 +19,7 @@ typedef struct {
 
 void imprimeMapa (int jogadorLinha, int jogadorColuna, char mapa[LIN][COL + 1]);
 void movimento (int *jogadorLinha, int *jogadorColuna, char mov,char mapa[LIN][COL + 1]);//para modificar o conteudo do endereco
-void ehEscada(char mov);
+int ehEscada(char mov);
 int limite (int l, int c);
 //preferencialmente, vamos colocar tudo dentro de funcoes depois
 
@@ -177,8 +178,8 @@ void movimento (int *jogadorLinha, int *jogadorColuna, char mov, char mapa [LIN]
 }
 
 //ver se eh escada
-void ehEscada(char mov){
-    return (c == 'H' || c == 'S' || c == 'D');
+int ehEscada(char mov){
+    return (mov == 'H' || mov == 'h' || mov == 'S' || mov =='s' || mov == 'D' || mov == 'd');
 }
 
 
