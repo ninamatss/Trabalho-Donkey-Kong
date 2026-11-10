@@ -173,7 +173,7 @@ void movimento (int *jogadorLinha, int *jogadorColuna, char mov, char mapa [LIN]
                 printf ("Movimento invalido!\n");
         
      }
-            printf ("Posicao atual do jogador [%d][%d]\n", *jogadorLinha,*jogadorColuna);
+            printf ("Posicao atual do jogador [%d][%d]\n", *jogadorLinha,*jogadaColuna);
 
 }
 
@@ -186,4 +186,15 @@ int ehEscada(char mov){
 //limites do mapa
 int limite (int l, int c){
     return (l >= 0 && l < LIN && c >= 0 && c < COL);
+}
+
+void carregaMapa(const char *arquivo, char mapa[LIN][COL + 1], int *jogador.linha, int *jogador.coluna){
+    file *m = fopen(arquivo, "r");
+    if(m == NULL){
+        printf("Erro ao abrir o arquivo!");
+    }
+
+    // n sei mais oq fazer aq, vamos ver juntas
+
+
 }

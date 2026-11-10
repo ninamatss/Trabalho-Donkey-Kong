@@ -13,4 +13,4 @@ typedef struct{
 }REGISTRO;
 
 int registraRanking (const char *arquivo, const char *nome, int *pontos, double *tempo, REGISTRO ranking[TAM_RANKING]);
-// so nao sei ainda como puxa o arquico mas acho q puxa do ranking.c, precisamos ver isso
+// so nao sei ainda como puxa o arquico mas acho q puxa do ranking.c, precisamos ver isso, não lembro pela aula só coloquei o arquivo ali, acho que puxa o arquivo certo quando chamamos a função na main
