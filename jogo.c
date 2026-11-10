@@ -27,51 +27,6 @@ int encontraJogador (char mapa[LIN][COL + 1], int *jogadorLinha, int *jogadorCol
 //preferencialmente, vamos colocar tudo dentro de funcoes depois
 
 
-/*int main()
-{
-    int jogadorLinha = -1;  //caso nao seja encontrado
-    int jogadorColuna = -1; // talvez trocar por um ponteiro puxando da struct jogador
-    char mov;
-    char mapa[LIN][COL + 1]; //COL + 1 para caber o \0 de cada linha
-
-    /* Legenda do mapa:
-       P posicao inicial do jogador
-       E inimigos (1 ou mais)
-       Z plataformas
-       S subida de escada
-       D descida de escada
-       F porta (final da fase)
-       H escada (nenhum efeito, apenas visual) */
-
-    //le o mapa do arquivo (se nao conseguir abrir, encerra)
-    if (!carregaMapa ("mapa.txt", mapa)){
-        return 1;
-    }
-
-    //procura o P no mapa (se nao achar, encerra)
-    if (!encontraJogador (mapa, &jogadorLinha, &jogadorColuna)){
-        printf ("Erro: jogador nao encontrado!\n");
-        return 1;
-    }
-
-    imprimeMapa (jogadorLinha, jogadorColuna, mapa);
-    printf ("Posicao do jogador [%d][%d]\n", jogadorLinha, jogadorColuna);
-
-    //para alterar a posicao do jogador, somo ou diminuo nas linhas e colunas (hor e vert)
-    do {
-        scanf (" %c", &mov); //le o movimento do jogador, precisa clicar 'enter' depois
-        //espaco antes do % faz o scanf ignorar espacos em branco
-        if (mov != 'Q' && mov != 'q'){
-            movimento (&jogadorLinha, &jogadorColuna, mov, mapa);
-        }
-    } while ((mov != 'Q') && (mov != 'q')); //tecla escolhida para encerrar o jogo por enquanto
-
-    printf ("Jogo encerrado!\n");
-
-    return 0;
-} */
-
-
 int main()
 {
     int jogadorLinha = -1; //caso nao seja encontrado
