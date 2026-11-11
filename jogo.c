@@ -1,12 +1,12 @@
 #include <stdio.h>
-#include "ranking.h"
-//#include <conio.h> //para utilizar as teclas de seta
+#include "ranking.h" //biblioteca para o ranking
+
 #define LIN 30
 #define COL 30
 #define FDA EOF //final do arquivo
 
 typedef struct{
-    int linha, coluna; //posicao no mapa, jogador linha e coluna, depois vemos
+    int linhaJog, colunaJog; //posicao no mapa, jogador linha e coluna, depois vemos
     int vida;
     int pontos;
     double tempo; // ranking por tempo e pontos eu acho
@@ -14,7 +14,7 @@ typedef struct{
 
 //struct para ver posiçao do inimigo
 typedef struct {
-    int a,b;//linhas e colunas da matriz 
+    int linhaIni, colunaIni; //linhas e colunas da matriz 
     int direcao; // ver como vamos fazer no mapa igual jogados -1 esquerda +1 direita eu acho
 }INIMIGO;
 
@@ -29,8 +29,10 @@ int encontraJogador (char mapa[LIN][COL + 1], int *jogadorLinha, int *jogadorCol
 
 int main()
 {
-    int jogadorLinha = -1; //caso nao seja encontrado
-    int jogadorColuna = -1;// talvez trocar por um ponteiro puxando da struct jogador tanto p coluna quanto p linha, acho que otimaza o codigo
+    JOGADOR player; //cria o jogador
+    INIMIGO enemy; //cria inimigos
+    player.linhaJog = -1; //caso nao seja encontrado
+    player.colunaJog = -1;
     int i, j;
     char mov;
 
@@ -42,49 +44,12 @@ int main()
     //F Porta (Final da Fase)
     //H Escada (Nenhum efeito apenas sprite visual)
 
+//apaguei o mapa pq importamos o arquivo do mapa.txt
+//nós nos referimos ao mapa em outras funcoes, precisamos ver como substituir isso
 
-    //nivel 1 sem importar arquivo
-    //se quisermos utilizar cada linha como uma string, add +1 em COL para o \0
-    char mapa[LIN][COL + 1] = {
-    "                              ",
-    "         D      F     D       ",
-    "         HZZZZZZZZZZZZH       ",
-    "         H            H       ",
-    "     D   S            S   D   ",
-    "    ZHZZZZZZZZZZZZZZZZZZZZHZ  ",
-    "     H                    H   ",
-    "     S                    S   ",
-    "           D        D         ",
-    "   ZZZZZZZZHZZZZZZZZHZZZZZZZZZ",
-    "           H        H         ",
-    "   D       S        SE       D",
-    "ZZZZZZZZZZZZ        ZZZZZZZZZZ",
-    "  H                          H",
-    "  H                          H",
-    "  S     D             D      S",
-    "  ZZZZZHZZZZZZZZZZZZZZHZZZZZZZ",
-    "       H              H       ",
-    "       S      D       S   E   ",
-    " ZZZZZZHZZZZZZZZZZZZZH        ",
-    "       H             H        ",
-    " D    ES             S      D ",
-    " HZZZZZZZZZZZZZZZZZZZZZZZZZZZH",
-    " H                           H",
-    " S   P                       S",
-    "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ",
-    "                              ",
-    "                              ",
-    "                              ",
-    "                              "
-};
+    carregaMapa("mapa.txt", mapa); //carrega o mapa do arquivo
 
-    //imprimindo o mapa
-    for (i=0; i<LIN; i++){
-        for (j=0; j<COL; j++){ 
-            printf ("%c", mapa[i][j]);
-        }
-        printf ("\n");
-    }
+    imprimeMapa (player.linhaJog, player.colunaJog, mapa);
 
     //para achar o jogador procuro por P na matriz
 
@@ -96,14 +61,14 @@ int main()
     for (i=0; i<LIN; i++){
         for (j=0; j<COL; j++){
             if (mapa[i][j] == 'P'){
-                jogadorLinha = i;
-                jogadorColuna = j;
+                player.linhaJog = i;
+                player.colunaJog = j;
                 mapa [i][j] = ' '; //apaga o jogador do mapa e permite que ele se movimente
             }
         }   
      }
      //queria uma matriz para identificar isso aqui, talvez com ponteiro, nao sei
-     printf ("Posicao do jogador [%d][%d]", jogadorLinha, jogadorColuna); 
+     printf ("Posicao do jogador [%d][%d]", player.linhaJog, player.colunaJog); 
     
     //para alterar a posicao do jogador, somo ou diminuo nas linhas e colunas (hor e vert)
     //para o jogador se movimentar no tabuleiro
@@ -112,7 +77,7 @@ int main()
         scanf (" %c", &mov); //le o movimento do jogados, precisa clicar 'enter' depois
         //espaco antes do % faz o scanf ignorar espacos em branco
         if (mov != 'Q' && mov != 'q'){  //parece redundante
-        movimento (&jogadorLinha, &jogadorColuna, mov, mapa);}
+        movimento (&player.linhaJog, &player.colunaJog, mov, mapa);}
 
     }while ((mov != 'Q') && (mov != 'q')); //tecla escolhida para encerrar o jogo por enquanto
     
@@ -121,11 +86,11 @@ int main()
     return 0;
 }
 
-    void imprimeMapa (int jogadorLinha, int jogadorColuna, char mapa[LIN][COL + 1]){
+    void imprimeMapa (int playerLinha, int playerColuna, char mapa[LIN][COL + 1]){
         int i, j;
         for (i=0; i<LIN; i++){
             for (j=0; j<COL; j++){ 
-                if ((i == jogadorLinha) && (j == jogadorColuna)){
+                if ((i == playerLinha) && (j == playerColuna)){
                     printf ("P");}
                 else{
                     printf("%c", mapa[i][j]);
@@ -134,50 +99,50 @@ int main()
         printf ("\n"); }
     }
 
-void movimento (int *jogadorLinha, int *jogadorColuna, char mov, char mapa [LIN][COL + 1]){
+void movimento (int *playerLinha, int *playerColuna, char mov, char mapa [LIN][COL + 1]){
 
         switch (mov){ //preciso impletar as setas depois
             case 'W':
             case 'w':
-                if (*jogadorLinha > 0){ //vai ate a posicao 1 para andar mais uma casa
-                (*jogadorLinha)--;}
+                if (*playerLinha > 0){ //vai ate a posicao 1 para andar mais uma casa
+                (*playerLinha)--;}
                 else{
                     printf("Bateu na parede!\n"); //isso vai sair em algum momento
                 }
-                imprimeMapa (*jogadorLinha, *jogadorColuna, mapa);
+                imprimeMapa (*playerLinha, *playerColuna, mapa);
                 break;
             case 'S':
             case 's':
-                if (*jogadorLinha < 29){//so pode ir ate a pos 29 para ai andar mais uma casa
-                (*jogadorLinha)++;}
+                if (*playerLinha < 29){//so pode ir ate a pos 29 para ai andar mais uma casa
+                (*playerLinha)++;}
                 else{
                     printf("Bateu na parede!\n");
                 }
-                imprimeMapa (*jogadorLinha, *jogadorColuna, mapa);
+                imprimeMapa (*playerLinha, *playerColuna, mapa);
                 break;
             case 'A':
             case 'a':
-                if (*jogadorColuna > 0){
-                (*jogadorColuna)--;}
+                if (*playerColuna > 0){
+                (*playerColuna)--;}
                 else{
                     printf("Bateu na parede!\n");
                 }
-                imprimeMapa (*jogadorLinha, *jogadorColuna, mapa);
+                imprimeMapa (*playerLinha, *playerColuna, mapa);
                 break;
             case 'D':
             case 'd':
-                if (*jogadorColuna < 29){
-                (*jogadorColuna)++;}
+                if (*playerColuna < 29){
+                (*playerColuna)++;}
                 else{
                     printf("Bateu na parede!\n");
                     }
-                imprimeMapa (*jogadorLinha, *jogadorColuna, mapa);
+                imprimeMapa (*playerLinha, *playerColuna, mapa);
                 break;
             default:
                 printf ("Movimento invalido!\n");
         
      }
-            printf ("Posicao atual do jogador [%d][%d]\n", *jogadorLinha,*jogadaColuna);
+            printf ("Posicao atual do jogador [%d][%d]\n", *playerLinha,*playerColuna);
 
 }
 
@@ -201,6 +166,7 @@ int carregaMapa(const char *arquivo, char mapa[LIN][COL + 1]){
         printf("Erro ao abrir o arquivo!\n");
         return 0;
     }
+//vou precisar que tu me explique isso aqui
 
     for(i=0; i<LIN; i++){
         for(j=0; j<COL; j++){
@@ -230,13 +196,13 @@ int carregaMapa(const char *arquivo, char mapa[LIN][COL + 1]){
 }
 
 //procura o P, guarda a posicao e apaga ele do mapa. Retorna 1 se achou, 0 se nao
-int encontraJogador (char mapa[LIN][COL + 1], int *jogadorLinha, int *jogadorColuna){
+int encontraJogador (char mapa[LIN][COL + 1], int *playerLinha, int *playerColuna){
     int i, j;
     for (i=0; i<LIN; i++){
         for (j=0; j<COL; j++){
             if (mapa[i][j] == 'P'){
-                *jogadorLinha = i;
-                *jogadorColuna = j;
+                *playerLinha = i;
+                *playerColuna = j;
                 mapa[i][j] = ' '; //apaga o jogador do mapa e permite que ele se movimente
                 return 1;
             }
