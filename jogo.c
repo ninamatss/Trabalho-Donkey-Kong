@@ -35,6 +35,11 @@ int main()
     player.colunaJog = -1;
     int i, j;
     char mov;
+    char mapa[LIN][COL + 1];
+    REGISTRO ranking[TAM_RANKING]; //vetor de registros para o ranking
+    int qtdeRegistros = 0; //quantidade de registros no ranking
+
+    qtdeRegistros = registraRanking("placar.bin", ranking); //chama a função para registrar o ranking, passando o arquivo e o vetor de registros
 
     //P Posic¸ao inicial do jogador 
     //E Inimigos (1 ou mais)
