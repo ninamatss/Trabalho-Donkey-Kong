@@ -16,7 +16,22 @@ int encontraInimigo (char mapa[LIN][COL + 1], int *enemyLinha, int *enemyColuna)
         }
     }
 }
+// nao sei se faz sentido 
+void moveInimigo(int *linha, int *coluna, int *direcao, char mapa[LIN][COL + 1]);{
+    int novaColuna;
+    int linhaLimite = *linha + 1; //linha abaixo do inimigo
 
-void moveInimigo(INIMIGO *enemy, char mapa[LIN][COL + 1]);{
+    switch (*direcao){
+        case DIREITA 
+           novaColuna = *coluna + 1;
+           if(novaColuna < COL)
+              if(mapa[linhaLimite][novaColuna] == ' ' && mapa[*linha][novaColuna] == ' '){
+                 *coluna = novaColuna;
+                } else {
+                 *direcao = ESQUERDA;
+                }
+                break;  
+        }
+    }
     
 } 
