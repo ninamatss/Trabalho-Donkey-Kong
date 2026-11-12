@@ -9,5 +9,6 @@ typedef struct{
     int direcao; // ver como vamos fazer no mapa igual jogados -1 esquerda +1 direita eu acho
 }INIMIGO;
 
-int encotraInimigo (char mapa[LIN][COL + 1], int *inimigoLinha, int *inimigoColuna);
+int contarInimigos(char mapa[LIN][COL + 1]);
 void moveInimigo(INIMIGO *enemy, char mapa[LIN][COL + 1]);
+int encontraInimigo (char mapa[LIN][COL + 1], int *enemyLinha, int *enemyColuna, int qnteInimigos, INIMIGO enemy[], int *direcao);

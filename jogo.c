@@ -13,8 +13,8 @@ typedef struct{
 }JOGADOR;
 
 typedef struct{
-    int linhaInimigo, colunaInimigo; //posicao no mapa, inimigo linha e coluna
-    int vida;
+    int linhaInimigo, colunaInimigo; //posicao no mapa do inimigo linha e coluna
+    int direcao;
 }INIMIGO;
 
 int ehEscada(char mov);
@@ -23,7 +23,6 @@ int limite (int l, int c);
 int main()
 {
     JOGADOR player; //cria o jogador
-    INIMIGO enemy; //cria inimigos
     player.linhaJog = -1; //caso nao seja encontrado
     player.colunaJog = -1;
     int i, j;
@@ -31,6 +30,14 @@ int main()
     char mapa[LIN][COL + 1];
     REGISTRO ranking[TAM_RANKING]; //vetor de registros para o ranking
     int qtdeRegistros = 0; //quantidade de registros no ranking
+    int quantosIni = 0;;
+    
+    quantosIni = contarInimigos(mapa);
+    INIMIGO *enemy = malloc(quantosIni * sizeof(INIMIGO)); //feito para alocar dinamicamente a quantidade de inimigos encontrados no mapa
+    if (enemy == NULL) {
+        printf("Erro: falha ao alocar memoria para inimigos!\n");
+        return 1;
+    }
 
     qtdeRegistros = registraRanking("placar.bin", ranking); //chama a função para registrar o ranking, passando o arquivo e o vetor de registros
 
@@ -57,26 +64,25 @@ int main()
 
     if (!encontraJogador(mapa, &player.linhaJog, &player.colunaJog)) {
     printf("Erro: jogador nao encontrado!\n");
-    return 1;
-}
+    return 1; //se o jogador nao for encontrado, o programa termina 
+    }
+    
     imprimeMapa(player.linhaJog, player.colunaJog, mapa);
     printf("Posicao do jogador [%d][%d]\n", player.linhaJog, player.colunaJog);
 
-     
-    
-    //para alterar a posicao do jogador, somo ou diminuo nas linhas e colunas (hor e vert)
-    //para o jogador se movimentar no tabuleiro
+    encontraInimigo(mapa, quantosIni, enemy); //chama a função para encontrar os inimigos no mapa e armazenar suas posições no vetor de inimigos
 
     do {
         scanf (" %c", &mov); //le o movimento do jogados, precisa clicar 'enter' depois
         //espaco antes do % faz o scanf ignorar espacos em branco
-        if (mov != 'Q' && mov != 'q'){  //parece redundante
+        if (mov != 'Q' && mov != 'q'){ 
         movimento (&player.linhaJog, &player.colunaJog, mov, mapa);}
 
     }while ((mov != 'Q') && (mov != 'q')); //tecla escolhida para encerrar o jogo por enquanto
     
     printf ("Jogo encerrado!\n");
 
+    free(enemy);
     return 0;
 }
 
@@ -93,6 +99,4 @@ int ehEscada(char mov){
 int limite (int l, int c){
     return (l >= 0 && l < LIN && c >= 0 && c < COL);
 }
-
-
 //procura o P, guarda a posicao e apaga ele do mapa. Retorna 1 se achou, 0 se nao
