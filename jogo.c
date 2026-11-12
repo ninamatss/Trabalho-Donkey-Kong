@@ -12,12 +12,6 @@ typedef struct{
     double tempo; // ranking por tempo e pontos eu acho
 }JOGADOR;
 
-//struct para ver posiçao do inimigo
-typedef struct {
-    int linhaIni, colunaIni; //linhas e colunas da matriz 
-    int direcao; // ver como vamos fazer no mapa igual jogados -1 esquerda +1 direita eu acho
-}INIMIGO;
-
 void imprimeMapa (int jogadorLinha, int jogadorColuna, char mapa[LIN][COL + 1]);
 void movimento (int *jogadorLinha, int *jogadorColuna, char mov,char mapa[LIN][COL + 1]);//para modificar o conteudo do endereco
 int ehEscada(char mov);
@@ -53,9 +47,7 @@ int main()
 //nós nos referimos ao mapa em outras funcoes, precisamos ver como substituir isso
 
     carregaMapa("mapa.txt", mapa); //carrega o mapa do arquivo
-
-    imprimeMapa (player.linhaJog, player.colunaJog, mapa);
-
+    
     //para achar o jogador procuro por P na matriz
 
         //talvez fazer isso para ver se o jogador de fato existe no mapa
@@ -63,17 +55,15 @@ int main()
             //printf("Erro: jogador nao encontrado!\n");
             //return 1;
 
-    for (i=0; i<LIN; i++){
-        for (j=0; j<COL; j++){
-            if (mapa[i][j] == 'P'){
-                player.linhaJog = i;
-                player.colunaJog = j;
-                mapa [i][j] = ' '; //apaga o jogador do mapa e permite que ele se movimente
-            }
-        }   
-     }
-     //queria uma matriz para identificar isso aqui, talvez com ponteiro, nao sei
-     printf ("Posicao do jogador [%d][%d]", player.linhaJog, player.colunaJog); 
+
+    if (!encontraJogador(mapa, &player.linhaJog, &player.colunaJog)) {
+    printf("Erro: jogador nao encontrado!\n");
+    return 1;
+}
+    imprimeMapa(player.linhaJog, player.colunaJog, mapa);
+    printf("Posicao do jogador [%d][%d]\n", player.linhaJog, player.colunaJog);
+
+     
     
     //para alterar a posicao do jogador, somo ou diminuo nas linhas e colunas (hor e vert)
     //para o jogador se movimentar no tabuleiro
@@ -171,7 +161,6 @@ int carregaMapa(const char *arquivo, char mapa[LIN][COL + 1]){
         printf("Erro ao abrir o arquivo!\n");
         return 0;
     }
-//vou precisar que tu me explique isso aqui
 
     for(i=0; i<LIN; i++){
         for(j=0; j<COL; j++){
