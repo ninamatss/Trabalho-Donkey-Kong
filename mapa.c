@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <conio.h>
 #include "mapa.h"
 
 int carregaMapa(const char *arquivo, char mapa[LIN][COL + 1]){

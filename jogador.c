@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <conio.h>
 #include "jogador.h"
 
 
 void movimentoJogador (int *playerLinha, int *playerColuna, char mov,char mapa[LIN][COL + 1]);//para modificar o conteudo do endereco
 int encontraJogador (char mapa[LIN][COL + 1], int *jogadorLinha, int *jogadorColuna);
 
-
+//preciso considerar as plataformas aqui, pensar sobre
 void movimentoJogador (int *playerLinha, int *playerColuna, char mov, char mapa [LIN][COL + 1]){
 
         switch (mov){ //preciso impletar as setas depois
