@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "ranking.h" //biblioteca para o ranking
+#include <conio.h> // para nao usar scanf para movimento do jogador, mas sim as setas do teclado e sem apertar enter
 
 #define LIN 30
 #define COL 30
@@ -70,11 +71,10 @@ int main()
     imprimeMapa(player.linhaJog, player.colunaJog, mapa);
     printf("Posicao do jogador [%d][%d]\n", player.linhaJog, player.colunaJog);
 
-    encontraInimigo(mapa, quantosIni, enemy); //chama a função para encontrar os inimigos no mapa e armazenar suas posições no vetor de inimigos
+    quantosIni = encontraInimigo(mapa, quantosIni, enemy); //chama a função para encontrar os inimigos no mapa e armazenar suas posições no vetor de inimigos
 
     do {
-        scanf (" %c", &mov); //le o movimento do jogados, precisa clicar 'enter' depois
-        //espaco antes do % faz o scanf ignorar espacos em branco
+        mov = _getch(); //estudar mais sobre isso, outro dia vejo
         if (mov != 'Q' && mov != 'q'){ 
         movimento (&player.linhaJog, &player.colunaJog, mov, mapa);}
 
@@ -97,6 +97,6 @@ int ehEscada(char mov){
 
 //limites do mapa
 int limite (int l, int c){
-    return (l >= 0 && l < LIN && c >= 0 && c < COL);
+    return (l >= 0 && l < LIN && c >= 0 && c < COL); //retorna 1 se estiver dentro do mapa e 0 se estiver fora do mapa
 }
-//procura o P, guarda a posicao e apaga ele do mapa. Retorna 1 se achou, 0 se nao
+
