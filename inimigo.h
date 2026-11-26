@@ -11,5 +11,5 @@ typedef struct{
 
 int contarInimigos(char mapa[LIN][COL + 1]);
 void moveInimigo(INIMIGO *enemy, char mapa[LIN][COL + 1]);
-int encontraInimigo (char mapa[LIN][COL + 1], int *enemyLinha, int *enemyColuna, int qnteInimigos, INIMIGO enemy[], int *direcao);
+int encontraInimigo(char mapa[LIN][COL + 1], int quantosIni, INIMIGO enemy[]);
 int bateuInimigo(int linhaJog, int colunaJog, INIMIGO enemy[], int quantosIni);

@@ -1,26 +1,16 @@
 #include <stdio.h>
 #include "ranking.h" //biblioteca para o ranking
 #include <conio.h> // para nao usar scanf para movimento do jogador, mas sim as setas do teclado e sem apertar enter
+#include "inimigo.h"
+#include "jogador.h"
+#include "mapa.h"
 
 #define LIN 30
 #define COL 30
 #define FDA EOF //final do arquivo
 
-typedef struct{
-    int linhaJog, colunaJog; //posicao no mapa, jogador linha e coluna, depois vemos
-    int vida;
-    int pontos;
-    double tempo; // ranking por tempo e pontos eu acho
-}JOGADOR;
-
-typedef struct{
-    int linhaInimigo, colunaInimigo; //posicao no mapa do inimigo linha e coluna
-    int direcao;
-}INIMIGO;
-
 int ehEscada(char mov);
-void reiniciaFase(char mapa[LIN][COL + 1], JOGADOR *player, INIMIGO enemy[], int quantosIni); 
-
+void reiniciaFase(char mapa[LIN][COL + 1], JOGADOR *player,INIMIGO enemy[], int quantosIni);
 int main()
 {
     JOGADOR player; //cria o jogador
@@ -34,12 +24,22 @@ int main()
     int quantosIni = 0;
     int morreu = 0; //para a colisao com inimigo 
     
-    quantosIni = contarInimigos(mapa);
+    // Carrega o mapa a partir do arquivo "mapa.txt".
+    // Se ocorrer algum erro ao carregar, encerra o programa retornando 1.
+    if (!carregaMapa("mapa.txt", mapa)) {
+    return 1;
+}
+
+quantosIni = contarInimigos(mapa);
+
+INIMIGO *enemy = malloc(quantosIni * sizeof(INIMIGO));
+    /*quantosIni = contarInimigos(mapa);
+    
     INIMIGO *enemy = malloc(quantosIni * sizeof(INIMIGO)); //feito para alocar dinamicamente a quantidade de inimigos encontrados no mapa
     if (enemy == NULL) {
         printf("Erro: falha ao alocar memoria para inimigos!\n");
         return 1;
-    }
+    }*/
 
     qtdeRegistros = registraRanking("placar.bin", ranking); //chama a função para registrar o ranking, passando o arquivo e o vetor de registros
 
@@ -50,18 +50,6 @@ int main()
     //D Descida de escada
     //F Porta (Final da Fase)
     //H Escada (Nenhum efeito apenas sprite visual)
-
-//apaguei o mapa pq importamos o arquivo do mapa.txt
-//nós nos referimos ao mapa em outras funcoes, precisamos ver como substituir isso
-
-    carregaMapa("mapa.txt", mapa); //carrega o mapa do arquivo
-    
-    //para achar o jogador procuro por P na matriz
-
-        //talvez fazer isso para ver se o jogador de fato existe no mapa
-            //if (jogadorLinha == -1 || jogadorColuna == -1) {
-            //printf("Erro: jogador nao encontrado!\n");
-            //return 1;
 
 
     if (!encontraJogador(mapa, &player.linhaJog, &player.colunaJog)) {
@@ -76,8 +64,8 @@ int main()
 
     do {
         mov = _getch(); //estudar mais sobre isso, outro dia vejo
-        if (mov != 'Q' && mov != 'q'){ 
-        movimento (&player.linhaJog, &player.colunaJog, mov, mapa);}
+        movimentoJogador(&player.linhaJog, &player.colunaJog, mov, mapa);
+        morreu = bateuInimigo(player.linhaJog, player.colunaJog, enemy, quantosIni);
 
         if(!morreu){// so move inimigos se o jogador nao tiver morrido
             for(i = 0;i<quantosIni;i++){ // inimigo anda um passo a cada 
@@ -112,11 +100,5 @@ void reiniciaFase(char mapa[LIN][COL + 1], JOGADOR *player, INIMIGO enemy[], int
 //ver se eh escada
 int ehEscada(char mov){
     return (mov == 'H' || mov == 'h' || mov == 'S' || mov =='s' || mov == 'D' || mov == 'd');
-}
-
-
-//limites do mapa
-int limite (int l, int c){
-    return (l >= 0 && l < LIN && c >= 0 && c < COL); //retorna 1 se estiver dentro do mapa e 0 se estiver fora do mapa
 }
 
