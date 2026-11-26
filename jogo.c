@@ -19,7 +19,7 @@ typedef struct{
 }INIMIGO;
 
 int ehEscada(char mov);
-int limite (int l, int c);
+void reiniciaFase(char mapa[LIN][COL + 1], JOGADOR *player, INIMIGO enemy[], int quantosIni); 
 
 int main()
 {
@@ -31,7 +31,8 @@ int main()
     char mapa[LIN][COL + 1];
     REGISTRO ranking[TAM_RANKING]; //vetor de registros para o ranking
     int qtdeRegistros = 0; //quantidade de registros no ranking
-    int quantosIni = 0;;
+    int quantosIni = 0;
+    int morreu = 0; //para a colisao com inimigo 
     
     quantosIni = contarInimigos(mapa);
     INIMIGO *enemy = malloc(quantosIni * sizeof(INIMIGO)); //feito para alocar dinamicamente a quantidade de inimigos encontrados no mapa
@@ -78,6 +79,21 @@ int main()
         if (mov != 'Q' && mov != 'q'){ 
         movimento (&player.linhaJog, &player.colunaJog, mov, mapa);}
 
+        if(!morreu){// so move inimigos se o jogador nao tiver morrido
+            for(i = 0;i<quantosIni;i++){ // inimigo anda um passo a cada 
+                moveInimigo(&enemy[i], mapa);
+            }
+            morreu = bateuInimigo(player.linhaJog, player.colunaJog, enemy, quantosIni); //verifica se o jogador bateu em algum inimigo;
+
+        }
+
+        if (morreu) {
+            printf("Voce morreu! Reiniciando a fase...\n");
+            reiniciaFase(mapa, &player, enemy, quantosIni);
+            morreu = 0; // reseta o estado de morte para continuar o jogo
+        }
+        imprimeMapa(player.linhaJog, player.colunaJog, mapa);
+
     }while ((mov != 'Q') && (mov != 'q')); //tecla escolhida para encerrar o jogo por enquanto
     
     printf ("Jogo encerrado!\n");
@@ -86,7 +102,11 @@ int main()
     return 0;
 }
 
-   
+void reiniciaFase(char mapa[LIN][COL + 1], JOGADOR *player, INIMIGO enemy[], int quantosIni){ //reinicia a fase, reposicionando o jogador e os inimigos no mapa
+    carregaMapa("mapa.txt", mapa);
+    encontraJogador(mapa, &player->linhaJog, &player->colunaJog);
+    encontraInimigo(mapa, quantosIni, enemy);
+}
 
 
 //ver se eh escada
