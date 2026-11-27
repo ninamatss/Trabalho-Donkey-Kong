@@ -52,7 +52,7 @@ INIMIGO *enemy = malloc(quantosIni * sizeof(INIMIGO));
     //H Escada (Nenhum efeito apenas sprite visual)
 
 
-    if (!encontraJogador(mapa, &player.linhaJog, &player.colunaJog)) {
+    if (!encontraJogador(mapa, &player)) {
     printf("Erro: jogador nao encontrado!\n");
     return 1; //se o jogador nao for encontrado, o programa termina 
     }
@@ -64,7 +64,7 @@ INIMIGO *enemy = malloc(quantosIni * sizeof(INIMIGO));
 
     do {
         mov = _getch(); //estudar mais sobre isso, outro dia vejo
-        movimentoJogador(&player.linhaJog, &player.colunaJog, mov, mapa);
+        movimentoJogador(&player, mov, mapa);
         morreu = bateuInimigo(player.linhaJog, player.colunaJog, enemy, quantosIni);
 
         if(!morreu){// so move inimigos se o jogador nao tiver morrido
@@ -92,7 +92,7 @@ INIMIGO *enemy = malloc(quantosIni * sizeof(INIMIGO));
 
 void reiniciaFase(char mapa[LIN][COL + 1], JOGADOR *player, INIMIGO enemy[], int quantosIni){ //reinicia a fase, reposicionando o jogador e os inimigos no mapa
     carregaMapa("mapa.txt", mapa);
-    encontraJogador(mapa, &player->linhaJog, &player->colunaJog);
+    encontraJogador(mapa, player);
     encontraInimigo(mapa, quantosIni, enemy);
 }
 
